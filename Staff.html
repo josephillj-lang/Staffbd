@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StaffBD · Business development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--ink:#16233B;--ink2:#22345A;--bg:#F4F6F9;--card:#fff;--line:#E3E8EF;--text:#1D2939;--mute:#667085;--acc:#0E9F8E;--accd:#0B7F72;--amb:#B54708;--red:#B42318}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 Manrope,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--ink);color:#cfd8ea;padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.logo{font-weight:800;font-size:19px;color:#fff;padding:0 10px 18px;letter-spacing:-.2px}
+.logo span{color:#5EE0CF}
+aside button.nav{all:unset;cursor:pointer;display:flex;justify-content:space-between;padding:9px 10px;border-radius:8px;color:#cfd8ea;font-weight:500}
+aside button.nav:hover{background:var(--ink2)}
+aside button.nav.on{background:var(--acc);color:#fff;font-weight:600}
+aside button.nav i{font-style:normal;font-size:12px;opacity:.75}
+.foot{margin-top:auto;display:grid;gap:8px;font-size:12px;padding:0 6px}
+.foot label{display:grid;gap:4px}
+.foot input{background:var(--ink2);color:#cfd8ea;border:0;border-radius:8px;padding:8px;font:inherit}
+.foot select,.foot button{background:var(--ink2);color:#cfd8ea;border:0;border-radius:8px;padding:8px;font:inherit;cursor:pointer}
+main{padding:28px 32px;max-width:1280px;width:100%}
+h1{font-size:24px;margin:0 0 2px;letter-spacing:-.4px}
+.sub{color:var(--mute);margin:0 0 22px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.bar input[type=search]{flex:1;min-width:180px}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;color:var(--text);width:100%}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#f0f3f7}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.p:hover{background:var(--accd)}
+.btn.d{color:var(--red)}
+.kpis{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.kpi,.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.kpi b{display:block;font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1.2}
+.kpi.big{background:var(--ink);border-color:var(--ink);color:#fff}
+.kpi.big b{font-size:40px;color:#5EE0CF}
+.kpi span{color:var(--mute);font-size:13px}
+.kpi.big span{color:#b6c3dd}
+.grid{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:14px}
+.box h3{margin:0 0 12px;font-size:15px}
+.row{display:grid;grid-template-columns:100px 1fr 70px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.track{background:#EEF2F6;border-radius:6px;height:14px;overflow:hidden}
+.track div{height:100%;background:var(--acc);border-radius:6px}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;margin:6px 0 12px;background:#EEF2F6}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mute)}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;align-items:center}
+.li:first-of-type{border-top:0}.li small{color:var(--mute);display:block}
+.empty{color:var(--mute);padding:14px 0}
+.tw{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th{text-align:left;font-weight:600;color:var(--mute);font-size:12.5px;padding:11px 14px;background:#FAFBFC;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--line);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover{background:#F8FAFC}tr:last-child td{border-bottom:0}
+.bd{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.g{background:#DCF5EF;color:#0B6B5F}.b{background:#E1ECFB;color:#1D4C9E}.a{background:#FDEFD6;color:var(--amb)}.n{background:#EDF0F4;color:#475467}.r{background:#FCE4E1;color:var(--red)}
+.late{color:var(--red);font-weight:600}
+dialog{border:0;border-radius:14px;padding:0;width:min(560px,94vw);box-shadow:0 20px 60px rgba(16,24,40,.3)}
+dialog::backdrop{background:rgba(16,24,40,.45)}
+dialog form{padding:22px;display:grid;gap:12px;grid-template-columns:1fr 1fr}
+dialog h2{grid-column:1/-1;margin:0;font-size:18px}
+dialog label{display:grid;gap:4px;font-size:12.5px;color:var(--mute);font-weight:600}
+dialog label.w{grid-column:1/-1}
+dialog .w2{grid-column:1/-1;font-size:13px;display:grid;gap:4px;border-top:1px solid var(--line);padding-top:12px}
+a{color:var(--accd)}
+.acts{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.acts .d{margin-right:auto}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+#toast.on{opacity:1}
+@media(max-width:860px){
+ body{grid-template-columns:1fr}
+ aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:12px}
+ .logo{width:100%;padding-bottom:6px}.foot{display:none}
+ main{padding:18px 14px}
+ .kpis{grid-template-columns:1fr 1fr}.kpi.big{grid-column:1/-1}
+ .grid{grid-template-columns:1fr}
+ dialog form{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<aside id="side"></aside>
+<main id="main"></main>
+<dialog id="dlg"></dialog>
+<input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
+<div id="toast"></div>
+
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+const today=iso(new Date()),off=n=>{const x=new Date();x.setDate(x.getDate()+n);return iso(x)};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const STG=['New','Qualified','Proposal','Negotiation','Won','Lost'],CST=['Lead','Prospect','Active','Dormant'];
+const COL={'Decision maker':'g',Active:'g',Won:'g',Filled:'g',Yes:'g',Open:'b',Prospect:'b',Qualified:'b',Proposal:'a',Negotiation:'a','On hold':'a',Lead:'n',New:'n',Dormant:'n',Closed:'n',No:'n',Lost:'r'};
+const M={
+ clients:{label:'Companies',noun:'company',cols:[{k:'company',l:'Company',req:1},{k:'industry',l:'Industry'},{k:'website',l:'Website'},{k:'linkedin',l:'LinkedIn'},{k:'city',l:'City'},{k:'address',l:'Address',t:'area',hide:1},{k:'size',l:'Company size',o:['1-50','51-200','201-1000','1000+']},{k:'gst',l:'GST or registration no.',hide:1},{k:'status',l:'Status',o:CST},{k:'owner',l:'BD owner'},{k:'source',l:'Source'},{k:'notes',l:'Notes',t:'area',hide:1}]},
+ contacts:{label:'Contacts',noun:'contact',cols:[{k:'name',l:'Name',req:1},{k:'client',l:'Company',link:1},{k:'desig',l:'Designation'},{k:'email',l:'Email'},{k:'phone',l:'Phone'},{k:'alt',l:'Alternate phone',hide:1},{k:'linkedin',l:'LinkedIn'},{k:'role',l:'Role in hiring',o:['Decision maker','Influencer','HR','Finance','Other']},{k:'primary',l:'Primary contact',o:['No','Yes']},{k:'notes',l:'Notes',t:'area',hide:1}]},
+ deals:{label:'Pipeline',noun:'deal',cols:[{k:'title',l:'Deal',req:1},{k:'client',l:'Company',link:1},{k:'stage',l:'Stage',o:STG},{k:'value',l:'Value',t:'number'},{k:'close',l:'Expected close',t:'date'},{k:'owner',l:'BD owner'}]},
+ jobs:{label:'Requirements',noun:'requirement',cols:[{k:'role',l:'Role',req:1},{k:'client',l:'Company',link:1},{k:'positions',l:'Positions',t:'number'},{k:'location',l:'Location'},{k:'fee',l:'Fee or rate'},{k:'status',l:'Status',o:['Open','On hold','Filled','Closed']},{k:'posted',l:'Received on',t:'date'}]},
+ acts:{label:'Follow-ups',noun:'follow-up',cols:[{k:'date',l:'Date',t:'date'},{k:'client',l:'Company',link:1},{k:'type',l:'Type',o:['Call','Email','Meeting','Proposal sent']},{k:'notes',l:'Notes',t:'area'},{k:'next',l:'Next follow-up',t:'date'},{k:'done',l:'Done',o:['No','Yes']}]}
+};
+const seed=()=>({
+ clients:[['Northwind Logistics','Logistics','northwind.example','Jaipur','201-1000','Rohit','Active','Referral'],['Brightlane Pharma','Pharma','brightlane.example','Pune','1000+','Kavya','Prospect','LinkedIn'],['Kestrel Retail','Retail','kestrel.example','Jaipur','201-1000','Rohit','Lead','Cold call'],['Orbit Finserv','BFSI','orbit.example','Delhi NCR','51-200','Kavya','Active','Event'],['Saffron Hospitality','Hospitality','saffron.example','Udaipur','51-200','Rohit','Dormant','Website']].map(r=>({id:uid(),company:r[0],industry:r[1],website:r[2],city:r[3],address:'',size:r[4],gst:'',owner:r[5],status:r[6],source:r[7],notes:''})),
+ contacts:[['Anita Rao','Northwind Logistics','HR Head','anita@northwind.example','+91 98290 00001','Decision maker','Yes'],['Vikram Shah','Northwind Logistics','Procurement Manager','vikram@northwind.example','+91 98290 00011','Influencer','No'],['Meera Joshi','Brightlane Pharma','Talent Acquisition Lead','meera@brightlane.example','+91 98290 00002','Decision maker','Yes'],['Sam Verma','Kestrel Retail','Operations Head','sam@kestrel.example','+91 98290 00003','Decision maker','Yes'],['Dev Malhotra','Orbit Finserv','VP, Human Resources','dev@orbit.example','+91 98290 00004','Decision maker','Yes'],['Isha Kapoor','Saffron Hospitality','General Manager','isha@saffron.example','+91 98290 00005','Decision maker','Yes']].map(r=>({id:uid(),name:r[0],client:r[1],desig:r[2],email:r[3],phone:r[4],alt:'',linkedin:'',role:r[5],primary:r[6],notes:''})),
+ deals:[['Warehouse staffing, 40 heads','Northwind Logistics','Negotiation',1800000,off(12)],['Clinical research contract hiring','Brightlane Pharma','Proposal',2400000,off(25)],['Store managers, 3 cities','Kestrel Retail','Qualified',900000,off(40)],['Relationship managers batch','Orbit Finserv','Won',1500000,off(-8)],['Front desk and F&B pool','Saffron Hospitality','Lost',600000,off(-20)],['Annual payroll outsourcing','Northwind Logistics','New',3000000,off(60)]].map(r=>({id:uid(),title:r[0],client:r[1],stage:r[2],value:r[3],close:r[4],owner:'Rohit'})),
+ jobs:[['Forklift operator','Northwind Logistics',12,'Jaipur','8.33% fee','Open',off(-3)],['Clinical data associate','Brightlane Pharma',4,'Pune','12% fee','On hold',off(-10)],['Relationship manager','Orbit Finserv',15,'Delhi NCR','9% fee','Filled',off(-30)],['Store manager','Kestrel Retail',3,'Jaipur','10% fee','Open',off(-1)]].map(r=>({id:uid(),role:r[0],client:r[1],positions:r[2],location:r[3],fee:r[4],status:r[5],posted:r[6]})),
+ acts:[[off(-2),'Northwind Logistics','Call','Discussed volume and rate card',off(-1),'No'],[off(-1),'Brightlane Pharma','Proposal sent','Sent proposal v2',off(2),'No'],[off(-5),'Kestrel Retail','Meeting','Intro meeting with ops head',off(5),'No'],[off(-9),'Orbit Finserv','Email','Thanked for batch closure',off(-9),'Yes']].map(r=>({id:uid(),date:r[0],client:r[1],type:r[2],notes:r[3],next:r[4],done:r[5]}))
+});
+let db;try{db=JSON.parse(localStorage.getItem('staffbd'))}catch(e){}
+if(!db||!db.clients)db=seed();
+if(!db.contacts)db.contacts=db.clients.filter(c=>c.contact||c.email||c.phone).map(c=>({id:uid(),name:c.contact||c.company,client:c.company,desig:'',email:c.email||'',phone:c.phone||'',alt:'',linkedin:'',role:'Other',primary:'Yes',notes:''}));
+const save=()=>{try{localStorage.setItem('staffbd',JSON.stringify(db))}catch(e){}};
+const S={v:'dash',q:''};
+let cur;try{cur=localStorage.getItem('cur')||'₹'}catch(e){cur='₹'}
+let cc;try{cc=localStorage.getItem('cc')||'91'}catch(e){cc='91'}
+const wa=p=>{p=String(p).trim();let d=p.replace(/\D/g,'');if(p.startsWith('+'))return d;if(d.startsWith('00'))return d.slice(2);d=d.replace(/^0+/,'');return d.length<=10?cc+d:d};
+const money=n=>cur+new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:1}).format(n||0);
+const num=n=>new Intl.NumberFormat('en').format(n||0);
+const sum=(a,f)=>a.reduce((s,x)=>s+(+f(x)||0),0);
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)};
+
+function side(){
+ $('#side').innerHTML=`<div class="logo">Staff<span>BD</span></div>
+ <button class="nav ${S.v==='dash'?'on':''}" data-v="dash">Dashboard</button>
+ ${Object.keys(M).map(k=>`<button class="nav ${S.v===k?'on':''}" data-v="${k}">${M[k].label}<i>${db[k].length}</i></button>`).join('')}
+ <div class="foot">
+  <button id="expAll">Export all to Excel</button>
+  <button id="impAll">Import workbook</button>
+  <label>WhatsApp country code<input id="cc" value="${cc}" inputmode="numeric" aria-label="Default country code for WhatsApp numbers"></label>
+  <select id="cur" aria-label="Currency symbol">${['₹','$','€','£','AED '].map(c=>`<option ${c===cur?'selected':''}>${c}</option>`).join('')}</select>
+  <button id="clr">Clear all data</button>
+ </div>`;
+ document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{S.v=b.dataset.v;S.q='';render()});
+ $('#expAll').onclick=()=>exportXlsx(Object.keys(M),'StaffBD-export');
+ $('#impAll').onclick=()=>pick('all');
+ $('#cc').onchange=e=>{cc=e.target.value.replace(/\D/g,'')||'91';try{localStorage.setItem('cc',cc)}catch(x){}render()};
+ $('#cur').onchange=e=>{cur=e.target.value;try{localStorage.setItem('cur',cur)}catch(x){}render()};
+ $('#clr').onclick=()=>{if(confirm('Delete all clients, deals, requirements and follow-ups from this browser?')){db={clients:[],contacts:[],deals:[],jobs:[],acts:[]};save();render()}};
+}
+
+function dash(){
+ const open=db.deals.filter(d=>!['Won','Lost'].includes(d.stage));
+ const due=db.acts.filter(a=>a.next&&a.next<=off(7)&&a.done!=='Yes').sort((a,b)=>a.next.localeCompare(b.next));
+ const max=Math.max(1,...STG.map(s=>sum(db.deals.filter(d=>d.stage===s),d=>d.value)));
+ const cc=CST.map(s=>db.clients.filter(c=>c.status===s).length),tot=Math.max(1,sum(cc,x=>x)),pal=['#9AA7BC','#5B8DEF','#0E9F8E','#E5A13A'];
+ const byC={};open.forEach(d=>byC[d.client||'Unassigned']=(byC[d.client||'Unassigned']||0)+(+d.value||0));
+ const top=Object.entries(byC).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ const won=sum(db.deals.filter(d=>d.stage==='Won'),d=>d.value),lost=db.deals.filter(d=>d.stage==='Lost').length,wn=db.deals.filter(d=>d.stage==='Won').length;
+ return `<h1>Business development</h1><p class="sub">${new Date().toLocaleDateString('en',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>
+ <div class="kpis">
+  <div class="kpi big"><b>${money(sum(open,d=>d.value))}</b><span>Open pipeline across ${open.length} deals</span></div>
+  <div class="kpi"><b>${money(won)}</b><span>Won value</span></div>
+  <div class="kpi"><b>${num(sum(db.jobs.filter(j=>j.status==='Open'),j=>j.positions))}</b><span>Open positions</span></div>
+  <div class="kpi"><b>${wn+lost?Math.round(wn/(wn+lost)*100)+'%':'–'}</b><span>Win rate</span></div>
+ </div>
+ <div class="grid">
+  <div class="box"><h3>Pipeline by stage</h3>${STG.map(s=>{const v=sum(db.deals.filter(d=>d.stage===s),d=>d.value);return `<div class="row"><span>${s}</span><div class="track"><div style="width:${v/max*100}%;${s==='Lost'?'background:#D92D20':s==='Won'?'background:#12B76A':''}"></div></div><b>${money(v)}</b></div>`}).join('')}</div>
+  <div class="box"><h3>Clients by status</h3><div class="stack">${cc.map((n,i)=>`<div style="width:${n/tot*100}%;background:${pal[i]}"></div>`).join('')}</div><div class="leg">${CST.map((s,i)=>`<span><i style="background:${pal[i]}"></i>${s} ${cc[i]}</span>`).join('')}</div>
+   <h3 style="margin-top:20px">Top clients by open pipeline</h3>${top.length?top.map(t=>`<div class="li"><span>${esc(t[0])}</span><b>${money(t[1])}</b></div>`).join(''):'<div class="empty">No open deals yet.</div>'}</div>
+ </div>
+ <div class="box"><h3>Follow-ups due this week</h3>${due.length?due.map(a=>`<div class="li"><span>${esc(a.client)}<small>${esc(a.notes)}</small></span><span><span class="${a.next<today?'late':''}">${a.next<today?'Overdue · ':''}${a.next}</span> <button class="btn" data-done="${a.id}">Mark done</button></span></div>`).join(''):'<div class="empty">Nothing due. Add a next follow-up date on any activity to see it here.</div>'}</div>`;
+}
+
+function cellHTML(r,c,k){
+ const v=r[c.k]??'';
+ if(c.o&&v!=='')return `<span class="bd ${COL[v]||'n'}">${esc(v)}</span>`;
+ if(c.k==='value')return money(v);
+ if(k==='acts'&&c.k==='next'&&v&&v<today&&r.done!=='Yes')return `<span class="late">${esc(v)}</span>`;
+ if((c.k==='phone'||c.k==='alt')&&v)return `<a href="https://wa.me/${wa(v)}" target="_blank" rel="noopener" title="Open in WhatsApp" onclick="event.stopPropagation()">${esc(v)}</a>`;
+ if(c.k==='linkedin'){const ct=k==='contacts',u=v?(/^https?:\/\//.test(v)?v:'https://'+v):`https://www.linkedin.com/search/results/${ct?'people':'companies'}/?keywords=${encodeURIComponent(ct?r.name+' '+(r.client||''):r.company)}`;
+  return `<a href="${esc(u)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${v?(ct?'Open profile':'Open page'):'Find on LinkedIn'}</a>`}
+ if(c.k==='email'&&v)return `<a href="mailto:${esc(v)}" onclick="event.stopPropagation()">${esc(v)}</a>`;
+ if(c.k==='website'&&v)return `<a href="https://${esc(String(v).replace(/^https?:\/\//,''))}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(v)}</a>`;
+ return esc(v);
+}
+function rows(k){
+ const m=M[k],q=S.q.toLowerCase(),cols=m.cols.filter(c=>!c.hide);
+ const list=db[k].filter(r=>!q||m.cols.some(c=>String(r[c.k]??'').toLowerCase().includes(q)));
+ return list.length?list.map(r=>`<tr data-id="${r.id}">${cols.map(c=>`<td>${cellHTML(r,c,k)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}" class="empty">${db[k].length?'No matches.':'Nothing here yet. Add a record or import a sheet.'}</td></tr>`;
+}
+function page(k){
+ const m=M[k];
+ return `<h1>${m.label}</h1><p class="sub">${db[k].length} records</p>
+ <div class="bar"><input type="search" id="q" placeholder="Search ${m.label.toLowerCase()}" value="${esc(S.q)}" aria-label="Search">
+ <button class="btn p" id="add">Add ${m.noun}</button>
+ <button class="btn" id="imp">Import</button><button class="btn" id="exp">Export</button><button class="btn" id="tpl">Blank template</button></div>
+ <div class="tw"><table><thead><tr>${m.cols.filter(c=>!c.hide).map(c=>`<th>${c.l}</th>`).join('')}</tr></thead><tbody id="tb">${rows(k)}</tbody></table></div>`;
+}
+function render(){
+ side();
+ $('#main').innerHTML=S.v==='dash'?dash():page(S.v);
+ const k=S.v;
+ document.querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{db.acts.find(a=>a.id===b.dataset.done).done='Yes';save();render()});
+ if(k==='dash')return;
+ const bindRows=()=>document.querySelectorAll('#tb tr[data-id]').forEach(t=>t.onclick=()=>form(k,t.dataset.id));
+ bindRows();
+ $('#q').oninput=e=>{S.q=e.target.value;$('#tb').innerHTML=rows(k);bindRows()};
+ $('#add').onclick=()=>form(k);
+ $('#imp').onclick=()=>pick(k);
+ $('#exp').onclick=()=>exportXlsx([k],M[k].label);
+ $('#tpl').onclick=()=>exportXlsx([k],M[k].label+'-template',true);
+}
+
+function cbox(r){const cs=db.contacts.filter(c=>c.client===r.company);
+ return `<div class="w2"><b>Contacts at this company</b>${cs.map(c=>`<div class="li"><span>${esc(c.name)}<small>${esc([c.desig,c.email,c.phone].filter(Boolean).join(', '))}</small></span><span>${c.phone?`<a class="btn" href="https://wa.me/${wa(c.phone)}" target="_blank" rel="noopener">WhatsApp</a> `:''}<button type="button" class="btn" data-c="${c.id}">Edit</button></span></div>`).join('')||'<div class="empty">No contacts yet.</div>'}<div><button type="button" class="btn" id="addc">Add contact</button></div></div>`}
+function form(k,id,pre){
+ const m=M[k],r=id?db[k].find(x=>x.id===id):(pre||{});
+ const field=c=>{const v=esc(r[c.k]??(c.k==='status'?'Lead':c.k==='stage'?'New':''));
+  const w=c.t==='area'?' class="w"':'';
+  let i;
+  if(c.o)i=`<select name="${c.k}">${c.o.map(o=>`<option ${o===r[c.k]?'selected':''}>${o}</option>`).join('')}</select>`;
+  else if(c.t==='area')i=`<textarea name="${c.k}" rows="3">${v}</textarea>`;
+  else i=`<input name="${c.k}" type="${c.t==='number'?'number':c.t==='date'?'date':'text'}" value="${v}" ${c.req?'required':''} ${c.link?'list="cl"':''}>`;
+  return `<label${w}>${c.l}${i}</label>`};
+ const d=$('#dlg');
+ d.innerHTML=`<form><h2>${id?'Edit':'Add'} record</h2><datalist id="cl">${db.clients.map(c=>`<option value="${esc(c.company)}">`).join('')}</datalist>${m.cols.map(field).join('')}${k==='clients'&&id?cbox(r):''}
+ <div class="acts">${id?'<button type="button" class="btn d" id="del">Delete</button>':''}<button type="button" class="btn" id="cn">Cancel</button><button class="btn p">Save</button></div></form>`;
+ if(!d.open)d.showModal();
+ $('#cn',d).onclick=()=>d.close();
+ d.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>form('contacts',b.dataset.c));
+ if($('#addc',d))$('#addc',d).onclick=()=>form('contacts',null,{client:r.company});
+ if(id)$('#del',d).onclick=()=>{if(confirm('Delete this record?')){db[k]=db[k].filter(x=>x.id!==id);save();d.close();render()}};
+ $('form',d).onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),o={};
+  m.cols.forEach(c=>o[c.k]=c.t==='number'&&f.get(c.k)!==''?+f.get(c.k):f.get(c.k)||'');
+  if(id&&k==='clients'&&o.company!==r.company)['deals','jobs','acts','contacts'].forEach(x=>db[x].forEach(y=>{if(y.client===r.company)y.client=o.company}));
+  if(id)Object.assign(r,o);else db[k].unshift({id:uid(),...o});
+  save();d.close();render();toast('Saved')};
+}
+
+/* Excel / CSV import and export */
+const book=(ks,blank)=>{const wb=XLSX.utils.book_new();ks.forEach(k=>{const m=M[k];XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([m.cols.map(c=>c.l),...(blank?[]:db[k].map(r=>m.cols.map(c=>r[c.k]??'')))]),m.label)});return wb};
+function exportXlsx(ks,name,blank){XLSX.writeFile(book(ks,blank),name+'.xlsx');toast('Exported '+name+'.xlsx')}
+const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9]/g,'');
+const clean=(v,c)=>{if(v instanceof Date)return iso(new Date(v.getTime()+432e5));if(c.t==='number'){const n=parseFloat(String(v).replace(/[^0-9.\-]/g,''));return isNaN(n)?'':n}return String(v).trim()};
+function toRows(ws,m){
+ return XLSX.utils.sheet_to_json(ws,{defval:''}).map(r=>{const h={};Object.keys(r).forEach(x=>h[norm(x)]=r[x]);
+  const o={id:uid()};m.cols.forEach(c=>o[c.k]=clean(h[norm(c.l)]??h[norm(c.k)]??'',c));return o}).filter(o=>m.cols.some(c=>o[c.k]!==''));
+}
+let target='all';
+function pick(k){target=k;$('#file').value='';$('#file').click()}
+$('#file').onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ const rd=new FileReader();
+ rd.onload=()=>{try{
+  const wb=XLSX.read(rd.result,{type:'array',cellDates:true});let n=0;
+  (target==='all'?Object.keys(M):[target]).forEach(k=>{
+   const m=M[k],nm=wb.SheetNames.find(s=>norm(s)===norm(m.label))||(target!=='all'?wb.SheetNames[0]:null);
+   if(!nm)return;const add=toRows(wb.Sheets[nm],m);db[k]=[...add,...db[k]];n+=add.length});
+  save();render();toast(n?`Imported ${n} rows`:'No matching sheet or columns found. Use Blank template for the right headers.');
+ }catch(err){toast('Could not read that file')}};
+ rd.readAsArrayBuffer(f);
+};
+render();
+</script>
+</body>
+</html>
